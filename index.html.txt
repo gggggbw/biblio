@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Кітапхана Онлайн с Личным кабинетом и отзывами</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #f6f9fb;
+      margin: 0; padding: 0; color: #222;
+    }
+    header {
+      background: #fff;
+      padding: 20px 15px 10px 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .header-left img {
+      width: 48px;
+      height: 48px;
+    }
+    .header-left h1 {
+      font-weight: 700;
+      font-size: 28px;
+      color: #0097b2;
+      margin: 0;
+    }
+    .search-bar {
+      flex: 1;
+      max-width: 500px;
+      margin: 10px 15px;
+      display: flex;
+      gap: 10px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .search-bar button {
+      padding: 12px 26px;
+      background: #0097b2;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .search-bar button:hover {
+      background: #007a8a;
+    }
+    .user-panel {
+      min-width: 200px;
+      text-align: right;
+      font-size: 15px;
+    }
+    .user-panel button {
+      background: #0097b2;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-left: 10px;
+      transition: background 0.2s;
+    }
+    .user-panel button:hover {
+      background: #007a8a;
+    }
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      margin: 20px 0 10px 0;
+      flex-wrap: wrap;
+      padding: 0 10px;
+    }
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px 8px 8px;
+      border-radius: 20px;
+      border: none;
+      background: #e8f4fa;
+      color: #222;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      font-size: 15px;
+      white-space: nowrap;
+      min-width: 0;
+    }
+    .filter-btn .circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 4px;
+      flex-shrink: 0;
+    }
+    .filter-btn[data-category="Сөздіктер"] .circle { background: linear-gradient(135deg,#a18cd1 0%,#fbc2eb 100%);}
+    .filter-btn[data-category="Кітаптар"] .circle { background: linear-gradient(135deg,#43cea2 0%,#185a9d 100%);}
+    .filter-btn[data-category="Журналдар"] .circle { background: linear-gradient(135deg,#f7971e 0%,#ffd200 100%);}
+    .filter-btn[data-category="Мақалалар"] .circle { background: linear-gradient(135deg,#56ccf2 0%,#2f80ed 100%);}
+    .filter-btn[data-category="Сирек құжаттар мен қолжазбалар"] .circle { background: linear-gradient(135deg,#a18cd1 0%,#43cea2 100%);}
+    .filter-btn[data-category="Газеттер"] .circle { background: linear-gradient(135deg,#43cea2 0%,#ffd200 100%);}
+    .filter-btn[data-category="Барлығы"] .circle { background: linear-gradient(135deg,#0097b2 0%,#43cea2 100%);}
+    .filter-btn.active, .filter-btn:hover {
+      background: #0097b2;
+      color: #fff;
+    }
+    .filter-btn.active .circle, .filter-btn:hover .circle {
+      box-shadow: 0 0 0 3px #fff, 0 0 0 6px #0097b2;
+    }
+    .section-title {
+      max-width: 1200px;
+      margin: 0 auto 20px auto;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #222;
+      padding: 0 10px;
+      text-align: left;
+    }
+    .books-grid {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto 40px auto;
+      justify-content: flex-start;
+      padding: 0 10px;
+    }
+    .book-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      width: 180px;
+      padding: 18px 10px 16px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+      transition: box-shadow 0.2s;
+      position: relative;
+    }
+    .book-card:hover {
+      box-shadow: 0 4px 16px rgba(0,151,178,0.12);
+    }
+    .book-cover {
+      width: 110px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 7px;
+      margin-bottom: 14px;
+      background: #f2f2f2;
+    }
+    .book-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #006b8f;
+      margin-bottom: 6px;
+      text-align: center;
+      min-height: 40px;
+    }
+    .book-author {
+      font-size: 14px;
+      color: #555;
+      text-align: center;
+      margin-bottom: 7px;
+    }
+    .book-link {
+      color: #0097b2;
+      text-decoration: underline;
+      font-size: 14px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+    .book-link:hover {
+      color: #005c6e;
+    }
+    .reviews-container {
+      margin-top: 10px;
+      text-align: left;
+      width: 100%;
+      max-height: 120px;
+      overflow-y: auto;
+      border-top: 1px solid #ccc;
+      padding-top: 8px;
+      font-size: 13px;
+      color: #333;
+    }
+    .review {
+      margin-bottom: 6px;
+      border-bottom: 1px dotted #ccc;
+      padding-bottom: 4px;
+    }
+    .review strong {
+      color: #006b8f;
+    }
+    .review-text {
+      margin: 2px 0 0 0;
+    }
+    .review-form {
+      margin-top: 10px;
+      text-align: left;
+      width: 100%;
+    }
+    .review-form textarea {
+      width: 100%;
+      height: 60px;
+      resize: vertical;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      padding: 6px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    .review-form input[type="number"] {
+      width: 50px;
+      padding: 6px;
+      margin-top: 6px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .review-form button {
+      margin-top: 8px;
+      background: #0097b2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+    .review-form button:hover {
+      background: #007a8a;
+    }
+    #modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.35);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    #modalContent {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 520px;
+      width: 100%;
+      padding: 30px 20px 20px 20px;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      text-align: center;
+      animation: fadeIn 0.2s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    @keyframes fadeIn {
+      from { transform: scale(0.95); opacity: 0;}
+      to { transform: scale(1); opacity: 1;}
+    }
+    #modalContent img {
+      width: 140px;
+      height: 190px;
+      object-fit: cover;
+      border-radius: 7px;
+      margin-bottom: 16px;
+      margin-top: 6px;
+    }
+    #modalContent .modal-title {
+      font-weight: 700;
+      font-size: 22px;
+      color: #006b8f;
+      margin-bottom: 10px;
+    }
+    #modalContent .modal-author {
+      margin-bottom: 10px;
+      color: #444;
+      font-size: 16px;
+    }
+    #modalContent .modal-category {
+      margin-top: 10px;
+      color: #888;
+      font-size: 14px;
+    }
+    #modalContent .modal-desc {
+      margin-top: 15px;
+      color: #555;
+      font-size: 15px;
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+    #modalContent button.close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      background: none;
+      border: none;
+      font-size: 26px;
+      color: #888;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    #modalContent button.close:hover {
+      color: #0097b2;
+    }
+    /* Личный кабинет */
+    #userPanel {
+      max-width: 280px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      display: none;
+      text-align: center;
+    }
+    #userPanel p {
+      margin: 0 0 10px 0;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    #userPanel button {
+      background: #0097b2;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+    #userPanel button:hover {
+      background: #007a8a;
+    }
+    /* Вход/Регистрация */
+    #authPanel {
+      max-width: 280px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      text-align: center;
+    }
+    #authPanel input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    #authPanel button {
+      background: #0097b2;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 10px;
+    }
+    #authPanel button:hover {
+      background: #007a8a;
+    }
+    /* Звёздочки рейтинга */
+    .star {
+      font-size: 18px;
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+      user-select: none;
+    }
+    .star.selected, .star.hovered {
+      color: #ffb400;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <img src="https://cdn-icons-png.flaticon.com/512/29/29302.png" alt="Логотип библиотеки" />
+    <h1>Кітапхана Онлайн</h1>
+  </div>
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="Іздеу үшін автордың атын немесе мәтін жолын енгізіңіз" />
+    <button id="searchBtn">Іздеу</button>
+  </div>
+  <div class="user-panel" id="userPanel">
+    <span id="userName"></span>
+    <button id="logoutBtn">Шығу</button>
+  </div>
+</header>
+
+<div id="authPanel">
+  <input type="text" id="usernameInput" placeholder="Пайдаланушы аты" />
+  <button id="loginBtn">Кіру</button>
+</div>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-category="Барлығы"><span class="circle"></span>Барлығы</button>
+  <button class="filter-btn" data-category="Сөздіктер"><span class="circle"></span>Сөздіктер</button>
+  <button class="filter-btn" data-category="Кітаптар"><span class="circle"></span>Кітаптар</button>
+  <button class="filter-btn" data-category="Журналдар"><span class="circle"></span>Журналдар</button>
+  <button class="filter-btn" data-category="Мақалалар"><span class="circle"></span>Мақалалар</button>
+  <button class="filter-btn" data-category="Сирек құжаттар мен қолжазбалар"><span class="circle"></span>Сирек құжаттар мен қолжазбалар</button>
+  <button class="filter-btn" data-category="Газеттер"><span class="circle"></span>Газеттер</button>
+</div>
+
+<div class="section-title" id="sectionTitle">Барлығы</div>
+<div class="books-grid" id="booksGrid"></div>
+
+<!-- Модальное окно -->
+<div id="modal">
+  <div id="modalContent">
+    <button class="close" onclick="closeModal()">&times;</button>
+    <div id="modalBook"></div>
+  </div>
+</div>
+
+<script>
+  // Данные книг и документов (сокращён для примера, добавьте полный каталог)
+  const catalog = [
+    { title: "Город Верный", author: "Джусупбеков, С.", img: "https://kazneb.kz/FileStore/dataFiles/6a/1f/1106902/content/bigcover.png?time=1747757841135&key=c56db8ebf55f82bd8eb8aaf88b70f5ba", category: "Кітаптар", desc: "Роман о развитии города Верный (ныне Алматы) в начале XX века." },
+    { title: "Вопросы истории Казахстана", author: "Иванов, А.", img: "https://th.bing.com/th/id/R.eaf294226a02de21222bd7f1623a3c4c?rik=2cP9ns4jxYI0IA&pid=ImgRaw&r=0", category: "Кітаптар", desc: "Учебник по истории Казахстана с подробным описанием ключевых событий." },
+    { title: "Геометриялық салу теориясынан оқылған лекциялар", author: "Саламатин, М.Н.", img: "https://kazneb.kz/FileStore/dataFiles/43/3a/1722888/content/bigcover.png?time=1747773662315&key=2e4a64922625ca10e8a68dcece92a192", category: "Кітаптар", desc: "Лекции по теории геометрических построений для студентов технических вузов." },
+    { title: "История Казахстана", author: "Жумабаев, Н.", img: "https://th.bing.com/th/id/OIP.LOlrg-rPjtOBYIFacDzxbwHaFF?w=186&h=128&c=7&r=0&o=5&pid=1.7", category: "Кітаптар", desc: "Подробное изложение истории Казахстана с древних времен до современности." },
+    { title: "Современная литература Казахстана", author: "Аманжолов, Б.", img: "https://th.bing.com/th/id/OIP.85LrKUtxYW6m3Za0M5hYNAAAAA?w=186&h=235&c=7&r=0&o=5&pid=1.7", category: "Кітаптар", desc: "Сборник произведений современных казахстанских писателей." },
+    { title: "Сказки казахского народа", author: "Сборник", img: "data:image/jpeg;base64,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", category: "Кітаптар", desc: "Сборник традиционных казахских сказок для детей и взрослых." },
+    { title: "Қазақ әдебиеті", author: "Ахмет Байтұрсынұлы", img: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsJCQcJCQcJCQkJCwkJCQkJCQsJCwsMCwsLDA0QDBEODQ4MEhkSJRodJR0ZHxwpKRYlNzU2GioyPi0pMBk7IRP/2wBDAQcICAsJCxULCxUsHRkdLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCz/wAARCADGAKcDASIAAhEBAxEB/8QAGwAAAQUBAQAAAAAAAAAAAAAAAAEDBAUGAgf/xABPEAACAQMDAQQGBQUMCAUFAAABAgMABBEFEiExBhMiQRRRYXGBkSMyobHSFVJUk+EkNDVCQ1Nyc3WzwdElM2J0gpKU8AcXg7LxREVVY8L/xAAbAQABBQEBAAAAAAAAAAAAAAAAAQIDBQYEB//EADYRAAIBAwICBwYGAQUAAAAAAAABAgMEERIhBTEVI0FRYXGhExQiM1LhBjI0gdHwQiRiscHx/9oADAMBAAIRAxEAPwDNVo+xv8K3X9nSf30VUltZX953notvJKE3bigG0EAHbk+ZyMVe9kEePV71HUq6WEqsrcFT30XBq24i17rUXgUlgv8AUwfibvmiloxXnxuxKKKKACiiodvqNndXl3Ywibv7UsJd6BUJWTuvC24559lKk3yEJlFQIdX0y4vTYQSPJMFlYsExCe6xu2uTk/L9s/B644oaa5hkKKKKQUKKOaKACiiigAooooAKKKKACiiigU810++sYrV7W5DJ455VdIY5dwkjCEMHP1uuDj1DIAzVx2buVvO0GpXCpsWSwfaCBuwJYRlyPP11ka0vYz+Fbv8As6T+/irf8QglbVJLuMLZTbr04+JvsUmK6orAG2OcUmK6oxQLk5xWGku7qy1HtNJbRlnle6geUZ/c6PcY7zjz8hnzNbrFUllpFzFqWt3N0tu9pqCzosauzMySzb8OCoA49pqalJRzkR7h2dtLGKwtbiIRSzyh3mmKqHV84aLc3IC4x18s+dUdzcrEsrQ9otUuryPxHuY5ha/W/PL8D1HkfOn4IL3TNVXRhdD0TUu9zgKzGKSGZFY7hkPxzg84Hwfg0jtHDY3umq+nLbSlmL5cySklfDnHAOByQSMYHXiXZPLfMQkGW5vNDsbyfUpbJI1eW+mt0JklVWMIACEdTgn7qjaHc3kuqyQ299cXunJGWd7s4cnAC7Udi2c5HHGOuOKmC21vTtO0uOC406N4FuVuUu5FEE2+Teux5FHTn1daZ06xvrnU21a6nsDsWSHbpzq6lmi7rBZBtGAc9SScU3bDDt2IF7cRJJeFO0WpTXatM6R2scxtk8RIQuH6DpkcVLfUNQk7Mpd+kSLdC5WAzRtskZUldMkrjkgDNJa6T2hs4dRsYH08W10rhpn3mVxs7sKoxxkcHOccke1/8j6h+QRpmbf0n0ozZ7xu62d6z/W2Zzz+bStx23DDIh1DUNU/JWmabeyRSCyEl/dEuGMyIA4LcOdp9R5J9QzWqAICgnJAAJ9ZA61l9TsJtOttL1OB4YrrT4LaC5I+rIwURBgMDPUhs4yPdWitJXntLKZ8b5raCVyowCzoGOBUdTGE1yHIfopuSa3iMayzQxtIcRrJIiM5zt8IY5PqpyocDgooooAKKKKBTx+tL2L/AIWu/wCzpP7+Gs1Wm7Ffwtd/2bJ/fw16DxH9LU8jBWP6iHmb/FGK6pK8+NvkQDJA6ZIGfVk1QvqvaImWSDQWNrG0gDSyN3siISN6pkNg4yPAfjWgGAVJ6Agn3ZrDGeW1utQh1fU9dgeKRjai0ldhOuWI2l89eNpHHX1VNSinkRs0lnq1ve2FzfRIVNtHO00LtyrxRmQLuA6EYwcefTiqh+1N6tst2dIUW7tJHHKbhtjyICWUeHPHuqJbi40zs9qUs8UiSatOsFujDayR93gvIGwRkBscer18Q7u7tpNF0zToobsS2zySzyTQlIi8ituKnJPVuMgVLGnHPIMmp1O9t7SewSKwS81W6AFqmEDIvIyZCNwH1scjoTkeaWeqXT6gNM1KzW0unTvIjFJvjdcb8c58skHPkelVGtItzJo2rmC5l06a0t1nWIlZo1BZgGKZxkNwc44xnmnNKPZp9T086dbanJMjSyNNPJJ3UKiJx4hlgSeg5HWm6VpDLKs3NrfXeoXt/a397h/oYbYukMMALYMsiAkADAA95NX9lfaVbaPe3mm2pVIJA01tJI+4TO0aHc5LdQQQR6vLyr9PvIuzlzq9tfRTlZHWS2MagrME3BRliBhgRzzjkVxZ2l1D2c16aWJ4/TGt3hjKsHMcckY3bMZ55xx0GfOnySfPlsLnBaz6/Hb6dp140CtcXyGRLYSEKkasVZ2fbnHkOOefVTtzrCW1lplx6O0t1qKRG2tY2PLOFJy2M4BIA45z5dRnRp8w0O51G5WQyv6HbWMbK26K1STqExkbvd0/pVL1S0nfTezV2IZZYbaygjukj3LIqMEfPh8QzyM444puiGUgyyzi1W/jvoLDVNPS2kuVLW5ik7xWbDYVskjkgjOeD5c5qM+v6pFNb20ui7LicL3MRuPE+SQMYGPI+flUOzPZeS900WNtqslz6TEQZZZO7g2+IvJgtkD4D21L1VWPaLs6QrEBYckKxA+lm6kDFGmOcYFTYl/cxyS9nX1DSgLqaYqiPcyqbXF0iqQI+DnhufdWkPU1nO0AY6j2ZwrHE6Z2qxA/dMXUgVoznJ99RT/KhyCiiiohwUUUUCnj9absT/C13/Zsv9/DVXa6PcXdvbXKXukwrPLNEI769jtpQY5BHkK4JIOfL/GrrsnA1r2g1a1Zldra1u7dnTO1zFdRxllz5HHFegcQknbVEu4wlnBxrwb7zeYopaMV5+bLI2zRpjfJGmc47x0TPu3EVz31v+kW/s+mi/FS21vbTaled/BDLt06w299Gj4zcXecbgasPQtKHWzs/wDp4vw1Y0bL2sFPJyzudMsYKLULTTdTijhubhdkcomHc3MSMXAK8nJ45NPXaWV7bT2k1zH3U4VX7u4iVsKwcYOT6h5Va+iaR+i2X6iH8NKLPST0srM/+hD+Gpuj5fV6DPe13FTbLZWtvb20VxF3cESQx77iIttQYGTmne+t/wCfgx/XRfiqxFlpXP7is/8Ap4fw0noWmfoVlj+oi/DR0c/qF988Cu723/n7f9dF+KjvYOvfwZ/r4vxVaCw0wj942f8A08X4aDYaaB+8rP4wRfhpOjv9w73vwKvvoP0iDP8AXxZ/91HfQfz8H66L8VP3FlGwYRW2mx+3uYwfmVqH+TbjjKWBHshjb7kqWPCdS/OiF8Qx/iOd9b8/TwfrovxUd9B/PwfrovxU/DZW8ZHfQWcg6lVs4gfmVpww2HP+j7PH9RDn7Vpr4VLO0vQcuILG6IfeweU8H66L8VdAqwyrKw9aMGHzXilkgtzykFovlg2du33LUazQJJqqgIANRm4jQIv+qh6KKgurF28Nblkmt7xVpaUiRRiusUmKrTuyc4orrmigXJ5zbGwGk6Z6RopvmSXUpHlN7LZhY3vILdR9AwLeJlXkcZ44yRY9kozD2h1eFoe4aK1u4mg3953JS6jUx7yTnb0znnFL2dF3LpkiQT35aKW4ZbW20iyuVkTvFmYxXN8ojJBCkr3mQQMA4rrso8kvaTW5JDKZJLe9eQ3EaxTF2u4ye9jXhW/OA6HjyrdXr6iqvB95i7ddbTf8G7xRS0VhTV5GIAh1K8DOV/0fYYxjn6e79dS+4iX6uw5OdxySfnUSGNX1G83KDjTrDr7Z7upoWNOjbfZux9laeyfURx/dymuFmo8o4CjOCin3quKlJ3YA4xj1AD7qjkxFh9Llh0HUiu3UoM73IwfqgGuuSzsQR+HclDGK5ZWIOGA49RP+NVz3JjUMNxywUB5AG+AHNCT3LMB9GFycASlpPjij2UuYvtovYmlbgYwy+0lMD76bYtkCRk9p6j76FkIPikf3Aqac76MAkh8etlAz8elNw12C5T7RUEZHh2E4/N/zpSg4yqe0nj7qZacH6oI48xximhK4IB3NnP1dw6e+l0NhriiSe7XnMYNcls/ykePPCjn2cmue8jdDuhZsZG1sbvv/AMajAwfx7KVT0Ch0YfEswFLGORJS/u49KLTGGWI8/wAUqvPX+Kaq4dvpGsben5Slx+php6UW6scaccleC0ycfBc/fUe0VFk1YIu1RqU2FIII+hh8iT99cHE44oLzOqxlmq/Ik0UuKMVnC7OaKXFFApgdEFgLO2km1S2hdWvVks7rWL2xjeU3UPdyFLY8AR94QR1bGfWJXZRYV7S62sErTQrb3whldi7SxC8jCuzHkkjBJpjRmVtMtYZ7OykSSe6ht5LrXItOeUenQXLKkLxsTh0QZB88edWGgI6dru0XePbvK8N9LL6M8jxRyPeRs0QaREYlTwfCK3F6+pqrwZj6C+Om/E2uKSusUYrEGlyQSZ11G5MTRj/R1juEi5z+6Lroc12018M7nsx5Dg5+Wa4aKaTUbnu/4unWJI9eZ7vHnSGLVoySLcgYz4CrZ+IOa13DlF28c4/rKG8clVeM4EE9xkhbq3D+rc6r865N1eBlUTRsxI247x8npgbuKaea75EkPPTxxEfCulnvVztQDP8A+sE/dmrTQu5HBrfLLHxHqtwJC3cJhdoZ0Cu2eoQgZ/7+TcNjqR25lEKZG7EnjC+Z8P8AnTUj30jBzGykADMcZUfIUbr5vCxZeOS4I49vBP2UmmSWzQuqLe6Zaoun2+9cqA31mmkLyPgdck5xXBvtPyUDKF6DxHpVU8MjDDNFJkYBMZHwBKimltjGytJa94OfBtBVvYSuTUaoRe8nuTe2fJIu2nt2O2OZiwGeSGXHvoDZIzNGo5+sAcfKqruJSDt06FA2cbYnJ49Xi/wpte/ACkybD/FMbbfkDSqksbMPab5ZebLp+BOHX85CAMe3kVwVji4la43f7KlweccEA/fVfDNLExaLuywwAjLKuQfUBuqWbu92EPaRqrZIcs5QAcE4Vc1E4STx9iROLOmltwCQLrHPJjYc+ziodmyvJqzru2nUpsbhhuIoRyKkLdJhQTb8ZLlzIufUANppiybfJq77g27U5zkcD/VQiqviqaorbtO6wfWvyJWKSuqMVmS8yc0UuBRQGTBaFHdHT4TJen0bvbm5tbIaNBqakx3dvbOzGQB9xd1O1WzgbsjIqb2ceSTtXr5lito5ltr2OcWfedy8yXkavIveszeI5PWsfDc6jabJLae8txcmSCNoHli787kV442UjJztBA88VqOxltdWuu3sF1BLBMulOzRTqUkUNPCQSD663l/DFCpJvsMdbTzUgkuTPQqSusUYrCmmyVFyzjUZlWV0DafZhggzu/dF0RTguJ12gXbkDjDIvl7xTN4WGpvgf/b7T1/z9zShpAfDGp9Z2K33itjw6KdtD9/+Siu5NVngdk1HuIbm4up0FvBE0szy8Ksa9ThfP1YH315vrnb7WLuQxaQ72FmhIVlCG7mwfrSOQce4fM1Z9uNSeK1tdJjUB7wrdXHke6jciNce0gk/0RVC3ZO8lgieBleUqm+PG3k9SrEnpUV3XhTlp5E9tSclqe5zY9u+1FpLC09yt9Cp+kiu0Teyk8gTIBID6uT7j0r07T9XttYsoryzUTQSDxKSe8hkH1opQpPiH7Rwcnzex7D6tK8gu9lvEM7XBEjN6tqAj45NTuz1je6B2juNLeXvIb6xlmiZQVWUwsrK20nh18an/I8R29zCVRU085H1qLUNeMYPQS0LqVnjEYHICPKpPv60jGFAvcuM8A/STMw9X1sVHAl/jd4OPIEn7a5JfPU+zqDVyoFZrJWYk8TsSxPICyuwzyecgfb512r4XfDMxJ6hoScZ4wD0qGTPxgv7/HSqZsY8XXnhsUnsxymhxrmcvtkMxXd4nESnI+JzTr3ECkKqyucDkRmMj2cjNMBpc+LefUFyOfX0o8TDIVuMYOCSfspNKHau4ejwxP0RJIPDRgADHXiiyAD6sAAManOOAB/JQ1wO9wQd2COeGFdadnOq5OT+U7jP6qGqfi66leZ3WD6z9v4JlFdUYrLF4c0UpopAMB2amvo7Vo4dOllSaeZIru51SGytYZypy9qs0TsJVUMGZATjPq4d7HFG7R6uY37xDZ3ZjfvXm3p6VFhu9kAZs9ckAnrgZqLoshsrO1uW1fUYVuLi5C2VpDaXEU22eKz7tI7sle9JcOcJ9QHz5qd2Si7ntRrsIMJ7m3v4s26COE7LyNcxopIC+oZ4+Fbq9+TVfh4mSov4qa8fA9AxSYrukxWINFkymvhfyihMmzbp8BJM00SgG4nG5u6YcD41Xrbq9x6O14pIjaTLT3nddMhTIXApztc8yalZmO7FuFsomJyQWKzTkAeWeuP25qncXV3LMY7W0kuMDvZlljUSkKPrKCBnjg4+ZNXFCclTSTOecU5ZwVuq2Lz6/plsHLpLbwuW+lP0cbOTjvSTzgfP56F9cg01kRrdXjBKsy3lss+QOStu+CR/xZ9lQHWWO4065uUZJ4jdI+4lie9AwCWJPAHHP3VPu4rGRGnZU+oWYmNXO7aVO3jPI6/9547irqktS2OujDC2JNx2r0+CGCXupZDcx95B9JDFHt3bSXlnZVGD7P21V48WrXfZy8aFI2Y6lDs7+KSNz3IdR3q8eR4xwfmXI7XS7y30wLJbsyd8kWwRTBgXywZSOh9fHX21Muo7cxww95bRGSYM8tyB3R3eHDKCByBxz5VDQcYSWFuSVYtxeeQ0ljEtziGecyyRqsFsiusL48TuHZVbeOmN2OfjUj0S6RIBeXEkUsqO+xpZkIA52nBPPu+3rVdJfW9tDOkE9ms2WtgQBuK8723YJ5yQMkYp1ZjcWyzXhkktDG6K1uFk3P1zhWBGPPOT95t1UktsldpTJp0ppGOCrLuBjkkuZDHIpx9Ugkft49/f5FKkgQjvAzYj3SGV1C5yoZeh9/7IGkz28aT2sEwmIzLEt0kgi29WIJ3HPTyqRDqNyJ2tIpysvdtI7blbvABwvK5GeijIHypspvm2Oikh/wBDdIklIEauC3WQhQo6MVBwff76cSymdS25UyJTGjSuzME53AqMYxz7OPXTDalFGrRXsV7C0hLyzxTS9wytx4jbIBnoFAOOajwXulFx6QGjjiUrEImYybSTnMhLPg9MEHPspqqPlkdhD8sEqsy97HnKswE5ACMCcnC5yOM5wKutAXba3o3bsaldeLcXzlYz9YgH7KyMmsRpLJ3Eh7skKY5igOzrl3SMr1/2h/lruz0sM1peSwlDE2pXe0oFCnCxqcBeOua57qTcMZH0sKWxbUYrrFJiq068iUUtFIGTzLQ5NAt0s31DTna5ubyWK2vJ7Rr63mwNghhtxIMOrFckRufn4bfsra31n2o1iC+Ci6FhcSSlQiq/eXMTCRUTgBuoGBjOMDGBSaRr0ek288AspZnmaQySLqN3b4DYAMccWVVwON64OD1qy7DtG+vak8cfdo+n3LpHvaTYrXMLBS7+I49Z5Nbu+jJUKrfLBk6EoudNLnk9IooorDGjMf2mjsW1BJbpUbudOhaMPDLLnM8wYfRHODxnj5Vi53cXKNp9sFZX3oBAYcE8klC7HHlya0/bU2q6hatcd8E/J6AvDM0W0d/KTnAI+dYy41nSLRVGnm6nl8J+mKCNCAQQ0mwO3wAHP1jVtRTcFgglzLW+fVUtIL29t47cd8qKVYASyPnA2BiM8NjA9dV19qc88UVlaSFI3UG5kGd+GORGhP2/L30l9rmtag9m886A2L95axxRRxxRyZBLFFGCT0JOcjjpT9zJpF3LaSafJLZS3EcbXMdwf3FBcMxVkjk5cJ55IIAPUY4llRjlSY6E2lhFpbaTd28Av9PluLa7hUMqTLhLjHVGxI3hPtUVZwStrSpdLJaxQx7o2ivpFiUyDlnG+N0I5wPj8amW4u7SO3g1PXLe4tJcboOz8sM920Q4IkuCBGnq/jH2edVsetG2up3trZPQPTJpra2k5aKIyExxlzknAx1zzTVSlJ6pYbHSmsYRsLjQYHElzBNZLH4FAt5laMSEdFURjOOvQUWdpf2ziV7uEQoYyTblcMCccd5t8Xq44+/my7YWcx7pZmgRlTetxFBG77T9XvYuD6/L3VZ3jaRcxDbPp/eOvKszLKMk5ybdiPYMp7KdjvIlzGpTpQZ37qWKWQq6FrpZzuyRnuVx8eP2iXewFPTFEf1RJuWBAGyT4Lkyjn1gA8e3isSziV2EEU77SCRE2XIUbvqbCcevn4VHvng3wrIZjLgg9/3i7DknaAH2DHA4UU3luKaOC7syJIoHZ4hh2EO5SuMZIQLUO+gguFlMAUqEDFmz9UYAbcWwCfbVPHfLEVjjSDw4bwRhiDnAyzDcTV2usWxhEU9q29SzkII4i5yFzKSSffxSphzIcNtBLGQ8hhCbY90KBRnHQMJFGePbjrya2HZmLubC5iDIwTUbsboxhDxGeOT99ZV9RsGDCXv5IhkNbxyRFJfMbiydB7zVr2f1zRbG0ltpmlg33tzMisryKschXGXUH21zXEcw2GK6oU5aZTSfmjYYoxTdvdWl0neW00c0f50bBgPYcU7Va00d6kmso5orrFFILkyH/l9Yf/lL79Vbfhp+10GHsvI2oW9zNdSTIbIx3KRqioxEpYGIA58IHxrXVU6/+84f96X+7euq74ldToTi59nh/By29nRVWL0kP8v3f6Pb/OX8VH5fu/0e3+cv4qpc++jxerHx/wABWTd1cL/P0ND7tS+kzH/iDeTXt3pDuqpizlUrGW2nExwTuNYk1rO2f+v0rnpazf3tZM81ueGSlO1hKfP7lDdRUa0ox5CA/bT1ubZLi3N0k0loJUNzFA4jlePPiEbkHB/74zkNAdfdSj7uKsGk+ZzcuRv+1mj9iLPQtM1bRO8WTUJkSz2XMskckWDJI8iTFm8ONp5BBIB9VYA4ArvvJCiRl3McZcxoWJRDIcsUU8DOAT68UzIScgUiST2DLY2px5/CrO01O+tE7lJX7hjyn5uT1Q+XnVYoJPPyp4ccfKnSSezDkaW3vXcJjLYUsGjC78nkHJG37K7uJpSSGaZ5DwxbZxxnkK2Rj2iqzT0u5reQRLMyRSYcrxEmRu8TNhQfjTywTtucgEKcblIdfgQSp+2uVrGUN5j6JfyyqIctwWKB18KDnJYjAHrNSI/SZFLXWw5AVUO1+FbIZmHB8sft4bDvmK3W7fEgIlWJJIGdeGIfkAggYqVTXyKHjF5KilRpvDfPyJdvpuq3cYmtrG7niLMoeGJnTcpwRkDyp9dC7ROwVdKvsk4G+IoPiz4H21bWV1r0Gi6LDo5uO+uL3Ve8S3iSQsqNHgtvUgAZ65HWnJ77/wARrKP0i4N0IV5ZxFZTIoH5/cq2B680qisb5KeNrRUU5KT2TeEsb7mfiuL/AEm8kME3dzwSNFJ3bBo2ZGwyNjgjIr0fRtVh1a0E6gJNGRHcxA57uTGcgn+Keo/ZXlzu0jvIxyzszsfWWJYmrzsrdtbavbxbvo71XtpB5btpkRveCMf8VclaCks9p0cJv5UK6pZ+CT5d3d9z0fFFLRVcb3IxdahZ2bxxzektJIjyqtrZ3d0wRCFLMLaN8DJA5xVfrMqT6dZTKHCSzRSKJUaNwrROwDo/iB9YIp2/Nr6dH6VaXzRCxk2XFsbp4y5lBaEx2njDjAZSfXxyKrphqS9n9IGpb/Tu8j7/ALwqZPqS7RIV43Yxu9uafd0oq1clz/8AeX/Y22m3XUWVRBJ6jH20hPlgn2CkyPaPbjj5115eH4jzPxrIflxjc0hi+2rIs+k52qTbTHBIH8rWS3p+cv8AzCvXXiglIMsEbkDAMsaMQOuAWBNcei2flaW+P6mL7sVpLPjFO2oRpOOcduSsrWLq1HPVzPJ1ePA8S/MUb0znevzFesei2XX0a3/Uxc+7w0ei2fnaW4/9GL/AV1dP0+2HqQ9Gv6vQ8n3p5MvzFJuTzZPbyK9Z9Fs/0S3/AFMX+VKbWzxza23whi4+O2kf4ggnhQ9fsHRsvq9DyUNGD9ZfmK63xgfWTPTqK9X9Gsv0W395gjx/7aPRbIf/AE1v+pjJJ/5ad0/D6PUOjX9XoebafPAqzKRC8hZWj7xTIq4BGdgYDPvzT8khJJZkZmPGzAOB7B/lXoXotkT+9rcY8jDGP/5pTa2mf3rbkeyGL7eKilx2nqzo9ROjH9XoYK1uZDcW0TzMYyZAqtJldxQ/VU1a1vtItNIuY7yxns7UPKjtFJ3EIlUMuxtjbcgjgjn7qxV/ZXNhdXNncAiSIldwHDofqyJ7D1H7KsqF1G5jrisGG/EdnOjVjPsxgeGo6kNMXT0dksBcys5iDKJZXAYxyOODjrj289BiX2Yvbi01nTkidhFdTLbTxgnY6yAgEr0yDgg/51a3M2l69ounW9rLY2F/YNk2kzJbQy7k2P3LHC8nBHyPrqNo2nwaZexalq95YwRWW6SGCO5huLieUqVUhLdm4Gc9euK7EnlYK6FGpGvTlGWYrG/Yl2+RG7VWMFjrE6QKqRXEUV0qIMKhk3KwAHlkE/Gougo0mtaMqjJF2rn+jGrO32CudZ1JtW1C5vNpRG2xwoeSkSDCg48zyT7TWg7HadsNxrVyNsMcUsVqzDqP5WYezjaPeahrySTYlCkrm/6pbZz+xprvVba0maB45XdVRjs2bfEN2OTn7KKzdxO1zcXE7AgyyFwD1Veij4DAorIzvJuT0vY9YhaQ0rVzNtVTr/7zg/3pP7t6tqqdfz6HBj9KX4fRvVjc49lLPcVtD5kTNZOT0pDxwOM9M8/Kjxea59xH+NHi/N49pFZlOKxhl+KeAPV5k0nGRjqccCjlegyPZ1Hwoz6gfguKE1jYBfM/HFJkev2c0Ybrx7v20Z/2Tn+jzSprsYC9R9o/+KBjz5x8s0mCc5HwPn76PF+b8iKTUnlZAXJPXpQPPpnGBmk8R8se0/5Cjxerp5HzpXo3WQF68Hr1B9VIOTnPTqPb7aPF+afmKMEnkeXB60jcVnD2A7SR4pEkRiskbB0YeR/761bTw6T2kgSK4+gvogRFImNwJ5OzPDKfNT+2qbkdR9mRRycYBHtIxj3V1213K3eYvY47q0p3UNFREG87J6/as3dQpdxjo9syhsf7UUhDZ92ahR6D2idgqaXdgn89FjX4tIQPtrURapqkACidnQcASqsnH/F4vtp465qhGAYgfWIQCP8AmyPsq8jxmm1lmRn+E6blmMsLz+xA07scY/3TrU0SQR4ZreJ/CfZNNwMexevr8jY6jqKTIlpaLstIwqjauwOE4UBR0UeQ/wDioE9xd3BDTyvKw5G9vCv9Feg+VM+L80/MGqy54k7j4VsjQ8P4RRsV8K3FOeM9fZRSYb1Aew/soqtjKEdsl0b3FVOvA+hw/wC9L/dvRRWivPkT8jP2/wA2Jm8UYoorIZNAGKMGiigAxRiiigAxRiiijIBijFFFABijFFFGQDFGKKKADFGKKKADFGKKKMgGDRRRSgf/2Q==", category: "Кітаптар", desc: "Классика казахской литературы XX века." },
+    { title: "Көшпенділер", author: "Ілияс Есенберлин", img: "https://upload.wikimedia.org/wikipedia/kk/thumb/c/c2/%D0%9A%D3%A9%D1%88%D0%BF%D0%B5%D0%BD%D0%B4%D1%96%D0%BB%D0%B5%D1%801.jpg/250px-%D0%9A%D3%A9%D1%88%D0%BF%D0%B5%D0%BD%D0%B4%D1%96%D0%BB%D0%B5%D1%801.jpg", category: "Кітаптар", desc: "Эпический роман о казахских ханах и степях." },
+    { title: "Абай жолы", author: "Мұхтар Әуезов", img: "https://th.bing.com/th/id/OIP.0n25CPefxgYn3jpCkztaGgHaKu?w=132&h=192&c=7&r=0&o=5&pid=1.7", category: "Кітаптар", desc: "Легендарный роман о жизни великого поэта Абая Кунанбаева." },
+    { title: "Қазақ батырлары", author: "Серікбай, Ж.", img: "https://kazneb.kz/FileStore/dataFiles/61/94/137573/content/bigcover.png?time=1747774414964&key=d87ec76b93620833c5e25d767de5b938", category: "Кітаптар", desc: "Истории и легенды о казахских батырах." },
+    // Журналдар
+    { title: "Журнал «Қазақстан тарихы»", author: "Редакция", img: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Magazine_cover.jpg", category: "Журналдар", desc: "Научно-популярный журнал по истории Казахстана." },
+    { title: "Журнал «Білім және ғылым»", author: "Редакция", img: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Education_magazine_cover.jpg", category: "Журналдар", desc: "Журнал для педагогов и ученых в области образования." },
+    { title: "Наука и Образование", author: "Редакция", img: "https://covers.openlibrary.org/b/id/8226191-L.jpg", category: "Журналдар", desc: "Журнал о последних достижениях в науке и образовании." },
+    { title: "Журнал «Мәдениет»", author: "Редакция", img: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Madeniet_magazine_cover.jpg", category: "Журналдар", desc: "Журнал о культуре и искусстве Казахстана." },
+    { title: "Журнал «Зерде»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523335-L.jpg", category: "Журналдар", desc: "Популярный научный журнал для молодежи." },
+    { title: "Журнал «Денсаулық»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523334-L.jpg", category: "Журналдар", desc: "Журнал о здоровье и медицине." },
+    { title: "Журнал «Ұстаз»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523329-L.jpg", category: "Журналдар", desc: "Журнал для учителей и педагогов." },
+    { title: "Журнал «Экономика»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523328-L.jpg", category: "Журналдар", desc: "Журнал о бизнесе и экономике Казахстана." },
+    // Сөздіктер
+    { title: "Қазақша-Орысша сөздік", author: "Аманжолов, Б.", img: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Dictionary_cover.jpg", category: "Сөздіктер", desc: "Толық қазақско-русский словарь с современными терминами." },
+    { title: "Русско-Казахский словарь", author: "Сериков, М.", img: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Dictionary_cover.jpg", category: "Сөздіктер", desc: "Словарь для перевода с русского на казахский язык." },
+    { title: "Толковый словарь русского языка", author: "Ушаков Д.Н.", img: "https://covers.openlibrary.org/b/id/8231857-L.jpg", category: "Сөздіктер", desc: "Обширный толковый словарь современного русского языка." },
+    { title: "Орфографический словарь русского языка", author: "Татьянченко", img: "https://covers.openlibrary.org/b/id/8231858-L.jpg", category: "Сөздіктер", desc: "Словарь с правилами орфографии и правописания." },
+    { title: "Англо-Қазақша сөздік", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523333-L.jpg", category: "Сөздіктер", desc: "Словарь для перевода с английского на казахский." },
+    { title: "Фразеологический словарь", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523327-L.jpg", category: "Сөздіктер", desc: "Словарь устойчивых выражений и фразеологизмов." },
+    { title: "Қазақ тілінің түсіндірме сөздігі", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523326-L.jpg", category: "Сөздіктер", desc: "Толковый словарь казахского языка." },
+    { title: "Медициналық терминдер сөздігі", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523325-L.jpg", category: "Сөздіктер", desc: "Словарь медицинских терминов на казахском языке." },
+    // Газеттер
+    { title: "Газета «Егемен Қазақстан»", author: "Редакция", img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Newspaper_cover.jpg", category: "Газеттер", desc: "Одна из старейших и крупнейших газет Казахстана." },
+    { title: "Газета «Қазақ газеті»", author: "Редакция", img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Newspaper_cover.jpg", category: "Газеттер", desc: "Национальная газета на казахском языке." },
+    { title: "Газета «Вечерний Алматы»", author: "Редакция", img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Newspaper_cover.jpg", category: "Газеттер", desc: "Региональная газета города Алматы." },
+    { title: "Газета «Айқын»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523332-L.jpg", category: "Газеттер", desc: "Современная газета на казахском языке." },
+    { title: "Газета «Литер»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523331-L.jpg", category: "Газеттер", desc: "Казахстанская общественно-политическая газета." },
+    { title: "Газета «Түркістан»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523324-L.jpg", category: "Газеттер", desc: "Газета о жизни и культуре тюркских народов." },
+    { title: "Газета «Дала мен қала»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523323-L.jpg", category: "Газеттер", desc: "Газета о событиях в сельской и городской жизни Казахстана." },
+    { title: "Газета «Жас Алаш»", author: "Редакция", img: "https://covers.openlibrary.org/b/id/10523322-L.jpg", category: "Газеттер", desc: "Молодежная газета на казахском языке." },
+    // Мақалалар
+    { title: "Мақала: Қазақстанның тәуелсіздігі", author: "Нұрсұлтан Ә.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Аналитическая статья о развитии Казахстана после обретения независимости." },
+    { title: "Мақала: Қазақ әдебиеті тарихы", author: "Айтбай, С.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Обзор ключевых этапов развития казахской литературы." },
+    { title: "Мақала: Тарих және мәдениет", author: "Қайрат Т.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Статья о взаимосвязи истории и культуры Казахстана." },
+    { title: "Мақала: Ұлы дала өркениеті", author: "Серік Ж.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Исследование по истории цивилизации Великой степи." },
+    { title: "Мақала: Қазақ хандығы", author: "Ерлан Д.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Статья о периоде становления и расцвета Казахского ханства." },
+    { title: "Мақала: Қазақтың ұлттық тағамдары", author: "Бекзат А.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Статья о традиционной кухне Казахстана." },
+    { title: "Мақала: Қазақ музыкасы", author: "Динара С.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Обзор истории казахской музыки." },
+    { title: "Мақала: Қазақтың киіз үйі", author: "Айгүл М.", img: "https://upload.wikimedia.org/wikipedia/commons/8/89/Article_icon.png", category: "Мақалалар", desc: "Статья о традиционном жилище кочевников." },
+    // Сирек құжаттар мен қолжазбалар
+    { title: "Құран Кәрім (XIX ғасыр)", author: "Белгісіз", img: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Quran_Karim_19century.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "XIX ғасырда жазылған қолжазба Құран Кәрім. Сирек кездесетін тарихи жәдігер." },
+    { title: "Абылай ханның жарлығы", author: "Абылай хан", img: "https://upload.wikimedia.org/wikipedia/commons/2/24/Abilay_khan_jarlygy.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "Абылай ханның қазақ халқына арналған тарихи жарлығы. XVIII ғасыр." },
+    { title: "Труды Актюбинской областной сельскохозяйственной опытной станции", author: "", img: "https://upload.wikimedia.org/wikipedia/commons/9/9e/Aktobe_book.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "Сборник научных трудов по сельскому хозяйству Актюбинской области." },
+    { title: "Рукопись по истории казахской степи", author: "Неизвестный автор", img: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Old_manuscript.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "Старинная рукопись, описывающая быт и историю казахской степи." },
+    { title: "Карта Семиречья (XIX век)", author: "Неизвестный картограф", img: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Old_map.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "Редкая карта Семиречья, составленная в XIX веке." },
+    { title: "Рукопись Абая", author: "Абай Құнанбаев", img: "https://covers.openlibrary.org/b/id/10523321-L.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "Оригинальные рукописи великого поэта Абая." },
+    { title: "Книга XIX века", author: "Неизвестный", img: "https://covers.openlibrary.org/b/id/10523320-L.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "Редкая книга из фондов национальной библиотеки." },
+    { title: "Старинная летопись", author: "Неизвестный летописец", img: "https://covers.openlibrary.org/b/id/10523319-L.jpg", category: "Сирек құжаттар мен қолжазбалар", desc: "Летопись о событиях в Центральной Азии." }
+  ];
+
+  // Отзывы хранятся в localStorage по ключу "reviews", структура: { bookTitle: [{user, rating, text}, ...], ... }
+  let reviews = JSON.parse(localStorage.getItem('reviews') || '{}');
+
+  const booksGrid = document.getElementById('booksGrid');
+  const filters = document.getElementById('filters');
+  const sectionTitle = document.getElementById('sectionTitle');
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const modal = document.getElementById('modal');
+  const modalBook = document.getElementById('modalBook');
+
+  // Личный кабинет
+  const authPanel = document.getElementById('authPanel');
+  const userPanel = document.getElementById('userPanel');
+  const usernameInput = document.getElementById('usernameInput');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const userNameSpan = document.getElementById('userName');
+
+  let currentUser = localStorage.getItem('username') || null;
+
+  function updateUserUI() {
+    if(currentUser) {
+      authPanel.style.display = 'none';
+      userPanel.style.display = 'block';
+      userNameSpan.textContent = currentUser;
+    } else {
+      authPanel.style.display = 'block';
+      userPanel.style.display = 'none';
+    }
+  }
+
+  loginBtn.onclick = () => {
+    const name = usernameInput.value.trim();
+    if(name) {
+      currentUser = name;
+      localStorage.setItem('username', currentUser);
+      updateUserUI();
+      usernameInput.value = '';
+      alert(`Қош келдіңіз, ${currentUser}!`);
+    } else {
+      alert('Пайдаланушы атын енгізіңіз.');
+    }
+  };
+
+  logoutBtn.onclick = () => {
+    currentUser = null;
+    localStorage.removeItem('username');
+    updateUserUI();
+  };
+
+  updateUserUI();
+
+  function renderCatalog(category = "Барлығы", search = "") {
+    booksGrid.innerHTML = "";
+    sectionTitle.textContent = category;
+
+    let filtered = catalog;
+    if (category !== "Барлығы") {
+      filtered = filtered.filter(item => item.category === category);
+    }
+    if (search) {
+      const s = search.toLowerCase();
+      filtered = filtered.filter(item =>
+        item.title.toLowerCase().includes(s) ||
+        item.author.toLowerCase().includes(s) ||
+        item.category.toLowerCase().includes(s)
+      );
+    }
+    if (filtered.length === 0) {
+      booksGrid.innerHTML = "<div style='margin:30px auto;color:#888;'>Нәтижелер табылмады</div>";
+      return;
+    }
+
+    filtered.forEach((book, idx) => {
+      booksGrid.innerHTML += `
+        <div class="book-card">
+          <img class="book-cover" src="${book.img}" alt="${book.title}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/110x150?text=Нет+изображения';" />
+          <div class="book-title">${book.title}</div>
+          <div class="book-author">Автор: ${book.author ? book.author : "-"}</div>
+          <a class="book-link" href="#" onclick="showModal(${idx});return false;">Толығырақ</a>
+        </div>
+      `;
+    });
+  }
+
+  filters.addEventListener('click', e => {
+    if (e.target.classList.contains('filter-btn')) {
+      filters.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+      renderCatalog(e.target.dataset.category, searchInput.value.trim());
+    }
+  });
+
+  searchBtn.addEventListener('click', () => {
+    const activeCategory = filters.querySelector('.filter-btn.active').dataset.category;
+    renderCatalog(activeCategory, searchInput.value.trim());
+  });
+
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      searchBtn.click();
+    }
+  });
+
+  // Рендер модального окна с отзывами и формой добавления
+  function showModal(idx) {
+    const book = catalog[idx];
+    const bookReviews = reviews[book.title] || [];
+
+    modalBook.innerHTML = `
+      <div class="modal-title">${book.title}</div>
+      <div class="modal-author">Автор: ${book.author ? book.author : "-"}</div>
+      <img src="${book.img}" alt="${book.title}" onerror="this.onerror=null;this.src='https://via.placeholder.com/140x190?text=Нет+изображения';" />
+      <div class="modal-category">Категория: ${book.category}</div>
+      <div class="modal-desc">${book.desc ? book.desc : "Толық ақпарат жоқ."}</div>
+
+      <h3>Пікірлер (${bookReviews.length})</h3>
+      <div class="reviews-container" id="reviewsContainer">
+        ${bookReviews.length ? bookReviews.map(r => `
+          <div class="review">
+            <strong>${r.user}</strong> — ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}
+            <div class="review-text">${r.text}</div>
+          </div>
+        `).join('') : '<p>Пікірлер жоқ.</p>'}
+      </div>
+
+      <div class="review-form">
+        <h4>Пікір қалдыру</h4>
+        ${currentUser ? `
+          <textarea id="reviewText" placeholder="Пікіріңізді жазыңыз..."></textarea>
+          <div>
+            Баға: 
+            <select id="reviewRating">
+              <option value="5">5 - Өте жақсы</option>
+              <option value="4">4 - Жақсы</option>
+              <option value="3">3 - Қанағаттанарлық</option>
+              <option value="2">2 - Нашар</option>
+              <option value="1">1 - Өте нашар</option>
+            </select>
+          </div>
+          <button onclick="submitReview('${book.title}')">Жіберу</button>
+        ` : `<p>Пікір қалдыру үшін жүйеге кіріңіз.</p>`}
+      </div>
+    `;
+    modal.style.display = "flex";
+  }
+
+  function submitReview(bookTitle) {
+    if (!currentUser) {
+      alert('Пікір қалдыру үшін жүйеге кіріңіз.');
+      return;
+    }
+    const text = document.getElementById('reviewText').value.trim();
+    const rating = parseInt(document.getElementById('reviewRating').value);
+    if (!text) {
+      alert('Пікірді енгізіңіз.');
+      return;
+    }
+    if (!reviews[bookTitle]) reviews[bookTitle] = [];
+    reviews[bookTitle].push({ user: currentUser, rating, text });
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+    alert('Пікіріңіз қабылданды!');
+    closeModal();
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeModal();
+  });
+
+  renderCatalog();
+
+  window.showModal = showModal;
+  window.closeModal = closeModal;
+</script>
+
+</body>
+</html>
